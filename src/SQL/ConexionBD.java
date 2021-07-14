@@ -24,7 +24,7 @@ public class ConexionBD {
         Connection conexion = null;
 
         try {
-            Class.forName("com.mysql.jdbc.Driver");
+           // Class.forName("com.mysql.jdbc.Driver");
             conexion = DriverManager.getConnection(url, usuario, password);
             JOptionPane.showMessageDialog(null, "Conexion exitosa");
         } catch (SQLException e) {
