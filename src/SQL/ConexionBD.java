@@ -20,11 +20,11 @@ public class ConexionBD {
     private static String usuario = "root";
     private static String password = "root";
 
-    public static Connection conectar() {
+    public static Connection conectar() throws ClassNotFoundException {
         Connection conexion = null;
 
         try {
-           // Class.forName("com.mysql.jdbc.Driver");
+            Class.forName("com.mysql.jdbc.Driver");
             conexion = DriverManager.getConnection(url, usuario, password);
             JOptionPane.showMessageDialog(null, "Conexion exitosa");
         } catch (SQLException e) {
