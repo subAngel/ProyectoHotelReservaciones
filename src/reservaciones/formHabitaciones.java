@@ -144,53 +144,7 @@ public class formHabitaciones extends javax.swing.JFrame {
             }
         }
     }
-    public void buscaHabitacionesReservadas(){
-        try { 
-            conexion=ConexionBD.conectar();
-            String consulta="SELECT numero_hab,reservado FROM reservaciones";
-            ps=conexion.prepareStatement(consulta);
-            rs=ps.executeQuery();
-            int numero;
-            String reservado;
-        
-            while (rs.next()){
-            numero=rs.getInt("numero_hab");
-            reservado=rs.getString("reservado");
-        
-            for(int i =0;i<filas; i++){
-                for(int j =0;j<columnas; j++){
-             
-                    if(JTBotones[i][j].getText().length()==12){
-                        String numeroLetra=JTBotones[i][j].getText().charAt(11)+"";
-                         int numeroN=Integer.parseInt(numeroLetra);
-                         if((numero==numeroN)&& (reservado.equals("sí"))){
-                     
-                     
-                            JTBotones[i][j].setBackground(Color.RED);
-                            JTBotones[i][j].setSelect(true);
-                         }
-                         else if(JTBotones[i][j].getText().length()==13){
-                                String numeroLetra=JTBotones[i][j].getText().charAt(11)+""+JTBotones[i][j].getText().charAt(12);
-                                int numeroN=    Integer.parseInt(numeroLetra);
-                                if((numero==numeroN)&& (reservado.equals("sí"))){
-                     
-                     
-                                     JTBotones[][].setBackground(Color.RED);
-                                     JTBotones[][].setSelect(true);
-                     
-                             
-                                     }
-                 
-                                }
-                            }
-                         }
-                    }
-                }
-            
-        } catch (Exception e) {
-            System.out.println("Error:"+e);
-        }
-}
+    
     
     public void buscarHabitacionReservada(){
         try {
