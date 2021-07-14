@@ -9,7 +9,7 @@ package reservaciones;
  *
  * @author angel
  */
-public class ReservacionHabitaciones {
+public class Principal {
     public static void main(String[] args) {
         MenuReservaciones.main(args);
     }
