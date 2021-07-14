@@ -45,9 +45,11 @@ public class formHabitaciones extends javax.swing.JFrame {
     int ejeX = 120;
     int ejeY = 50;
     
+    //VARIABLES VIDEO 4
     public static Connection conexion;
     public static PreparedStatement ps;
     public static ResultSet rs;
+    
     // AREGLO DE BOTONES
     public JToggleButton[][] JTBotones = new JToggleButton[filas][columnas];
     // filas son las que van hacia la derecha -> horizontal
@@ -152,32 +154,14 @@ public class formHabitaciones extends javax.swing.JFrame {
                     if(e.getSource().equals(JTBotones[i][j])){
                         if(JTBotones[i][j].isSelected()){
                             JTBotones[i][j].setBackground(Color.RED);
-                            if(JTBotones[i][j].getText().length() ==1){
-                                String numeroLetra = JTBotones[i][j].getText().charAt(11)+"";
-                                int numero  = Integer.parseInt(numeroLetra);
-                                reservarHabitacion(numero);
-                                //System.out.println(numero);
-                            }else if(JTBotones[i][j].getText().length() ==13){
-                                String numeroLetra = JTBotones[i][j].getText().charAt(11)+""+JTBotones[i][j].getText().charAt(12);
-                                int numero  = Integer.parseInt(numeroLetra);
-                                reservarHabitacion(numero);
-                                //System.out.println(numero);
-                            }
+                            String numeroLetra = JTBotones[i][j].getText();
+                            int numero = Integer.parseInt(numeroLetra);
                                                         
                         }else{
                             JTBotones[i][j].setBackground(new Color(31,222,101));
+                            String numeroLetra = JTBotones[i][j].getText();
+                            int numero = Integer.parseInt(numeroLetra);
                             
-                            if(JTBotones[i][j].getText().length() ==12){
-                                String numeroLetra = JTBotones[i][j].getText().charAt(11)+"";
-                                int numero  = Integer.parseInt(numeroLetra);
-                                quitarReservacionHabitacion(numero);
-                                //System.out.println(numero);
-                            }else if(JTBotones[i][j].getText().length() ==13){
-                                String numeroLetra = JTBotones[i][j].getText().charAt(11)+""+JTBotones[i][j].getText().charAt(12);
-                                int numero  = Integer.parseInt(numeroLetra);
-                                quitarReservacionHabitacion(numero);
-                                //System.out.println(numero);
-                            }
                         }
                     }
                 }
@@ -185,7 +169,7 @@ public class formHabitaciones extends javax.swing.JFrame {
         }
     }
     
-    
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
