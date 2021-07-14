@@ -5,6 +5,21 @@
  */
 package reservaciones;
 
+import SQL.ConexionBD;
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.HeadlessException;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JOptionPane;
+import javax.swing.JToggleButton;
+
 /**
  *
  * @author angel
@@ -18,7 +33,175 @@ public class formHabitaciones extends javax.swing.JFrame {
         initComponents();
         this.setLocationRelativeTo(null);
         //this.setResizable(false);
+        botones();
+        buscarHabitacionReservada();
     }
+    /*
+    * VALORES PARA EL ARREGLO DE LOS BOTONES
+    */
+    int filas = 5;
+    int columnas = 5;
+    int largoBoton = 80;
+    int anchoBoton = 80;
+    int ejeX = 120;
+    int ejeY = 50;
+    
+    //VARIABLES VIDEO 4
+    public static Connection conexion;
+    public static PreparedStatement ps;
+    public static ResultSet rs;
+    
+    // AREGLO DE BOTONES
+    public JToggleButton[][] JTBotones = new JToggleButton[filas][columnas];
+    // filas son las que van hacia la derecha -> horizontal
+    // columnas van hacia abajo 
+    
+    /*
+    INICIALIZAMOS LOS BOTONES
+    */
+    public void botones(){
+        int contHabitaciones = 1;
+        Font fuenteLetra = new Font("Comic Sans MC", Font.BOLD, 21);
+        JTBotones = new JToggleButton[filas][columnas];
+        for (int i = 0; i < filas; i++) {
+            for (int j = 0; j < columnas; j++) {
+                JTBotones[i][j] = new JToggleButton();
+                JTBotones[i][j].setBounds(ejeX, ejeY, largoBoton, anchoBoton);
+                JTBotones[i][j].setText(""+ contHabitaciones);
+                JTBotones[i][j].setFont(fuenteLetra);
+                JTBotones[i][j].setBackground(new Color(30, 215, 96));
+                AccionBotones accion = new AccionBotones();
+                JTBotones[i][j].addActionListener(accion);
+                panelBotonesHabitaciones.add(JTBotones[i][j]);
+                
+                contHabitaciones++;
+                ejeX += 160;
+                
+            }
+            ejeX = 120;
+            ejeY += 110;
+            
+        }
+    }
+    
+    /*
+    * @param nh Es el numero de habitaciones
+    */
+    public void reservarHabitacion(int nh) {
+        try {
+            try {
+                conexion = ConexionBD.conectar();
+            } catch (ClassNotFoundException ex) {
+                Logger.getLogger(formHabitaciones.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            String consulta = "UPDATE reservaciones SET reservado = 'si' WHERE numero_hab = " + nh;
+            ps = conexion.prepareStatement(consulta);
+            int mensaje = ps.executeUpdate();
+            
+            if (mensaje > 0){
+                JOptionPane.showMessageDialog(null, "Habitacion Reservada");
+            } else {
+                JOptionPane.showMessageDialog(null, "Error al actualizar el estado de la habitacion");
+            }
+            
+        } catch (HeadlessException | SQLException e) {
+            System.out.println("Error: " + e);
+        }
+        finally{
+            try {
+                conexion.close();
+            } catch (SQLException ex) {
+                Logger.getLogger(formHabitaciones.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }
+    
+    public void quitarReservacionHabitacion(int nh) {
+        try {
+            try {
+                conexion = ConexionBD.conectar();
+            } catch (ClassNotFoundException ex) {
+                Logger.getLogger(formHabitaciones.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            String consulta = "UPDATE reservaciones SET reservado = 'no' WHERE numero_hab = " + nh;
+            ps = conexion.prepareStatement(consulta);
+            int mensaje = ps.executeUpdate();
+            
+            if (mensaje > 0){
+                JOptionPane.showMessageDialog(null, "Se ha quitado la reservacion para esta habitacion");
+            } else {
+                JOptionPane.showMessageDialog(null, "Error al actualizar el estado de la habitacion");
+            }
+            
+        } catch (HeadlessException | SQLException e) {
+            System.out.println("Error: " + e);
+        }
+        finally{
+            try {
+                conexion.close();
+            } catch (SQLException ex) {
+                Logger.getLogger(formHabitaciones.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }
+    
+    
+    public void buscarHabitacionReservada(){
+        try {
+            conexion = ConexionBD.conectar();
+            String consulta = "SELECT numero_hab, reservado FROM reservaciones";
+            ps = conexion.prepareStatement(consulta);
+            rs = ps.executeQuery();
+            int numero;
+            String reservado;
+            
+            while (rs.next()) {
+                
+                numero = rs.getInt("numero_hab");
+                reservado = rs.getString("reservado");
+                
+                for (int i = 0; i < filas; i++) {
+                    for (int j = 0; j < columnas; j++) {
+                        
+                        String numeroletra = JTBotones[i][j].getText();
+                        int numeroH = Integer.parseInt(numeroletra);
+                        if ((numero == numeroH) && (reservado.equals("si"))) {
+                            JTBotones[i][j].setBackground(Color.red);
+                            JTBotones[i][j].setSelected(true);
+                        }
+                    }
+                }
+                
+            }
+        } catch (Exception e) {
+        }
+    }
+    
+    public class AccionBotones implements ActionListener{
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            for(int i=0; i<filas; i++){
+                for(int j=0; j<columnas; j++){
+                    if(e.getSource().equals(JTBotones[i][j])){
+                        if(JTBotones[i][j].isSelected()){
+                            JTBotones[i][j].setBackground(Color.RED);
+                            String numeroLetra = JTBotones[i][j].getText();
+                            int numero = Integer.parseInt(numeroLetra);
+                            reservarHabitacion(numero);
+                                                        
+                        }else{
+                            JTBotones[i][j].setBackground(new Color(31,222,101));
+                            String numeroLetra = JTBotones[i][j].getText();
+                            int numero = Integer.parseInt(numeroLetra);
+                            quitarReservacionHabitacion(numero);
+                        }
+                    }
+                }
+            }
+        }
+    }
+    
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -99,7 +282,7 @@ public class formHabitaciones extends javax.swing.JFrame {
         jPanel5.setBackground(new java.awt.Color(238, 243, 173));
         jPanel5.setForeground(new java.awt.Color(51, 51, 51));
 
-        jPanel2.setBackground(new java.awt.Color(0, 255, 0));
+        jPanel2.setBackground(new java.awt.Color(30, 215, 96));
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
