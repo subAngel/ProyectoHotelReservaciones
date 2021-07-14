@@ -5,6 +5,10 @@
  */
 package reservaciones;
 
+import java.awt.Color;
+import java.awt.Font;
+import javax.swing.JToggleButton;
+
 /**
  *
  * @author angel
@@ -18,7 +22,51 @@ public class formHabitaciones extends javax.swing.JFrame {
         initComponents();
         this.setLocationRelativeTo(null);
         //this.setResizable(false);
+        botones();
     }
+    /*
+    * VALORES PARA EL ARREGLO DE LOS BOTONES
+    */
+    int filas = 5;
+    int columnas = 5;
+    int largoBoton = 80;
+    int anchoBoton = 80;
+    int ejeX = 120;
+    int ejeY = 50;
+    
+    // AREGLO DE BOTONES
+    public JToggleButton[][] jTBotones = new JToggleButton[filas][columnas];
+    // filas son las que van hacia la derecha -> horizontal
+    // columnas van hacia abajo 
+    
+    /*
+    INICIALIZAMOS LOS BOTONES
+    */
+    public void botones(){
+        int contHabitaciones = 1;
+        Font fuenteLetra = new Font("Comic Sans MC", Font.BOLD, 21);
+        jTBotones = new JToggleButton[filas][columnas];
+        for (int i = 0; i < filas; i++) {
+            for (int j = 0; j < columnas; j++) {
+                jTBotones[i][j] = new JToggleButton();
+                jTBotones[i][j].setBounds(ejeX, ejeY, largoBoton, anchoBoton);
+                jTBotones[i][j].setText(""+ contHabitaciones);
+                jTBotones[i][j].setFont(fuenteLetra);
+                jTBotones[i][j].setBackground(new Color(30, 215, 96));
+                
+                panelBotonesHabitaciones.add(jTBotones[i][j]);
+                
+                contHabitaciones++;
+                ejeX += 160;
+                
+            }
+            ejeX = 120;
+            ejeY += 110;
+            
+        }
+    }
+    
+    
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -99,7 +147,7 @@ public class formHabitaciones extends javax.swing.JFrame {
         jPanel5.setBackground(new java.awt.Color(238, 243, 173));
         jPanel5.setForeground(new java.awt.Color(51, 51, 51));
 
-        jPanel2.setBackground(new java.awt.Color(0, 255, 0));
+        jPanel2.setBackground(new java.awt.Color(30, 215, 96));
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
